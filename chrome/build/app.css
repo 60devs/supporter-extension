@@ -1,0 +1,14 @@
+.t-button {
+    float: right;
+    color: #999;
+    cursor: pointer;
+}
+
+.t-button:hover {
+    color: #333;
+    text-decoration: underline;
+}
+
+.t-stackoverflow-button {
+    float: none;
+}

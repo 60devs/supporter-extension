@@ -1,0 +1,33 @@
+{
+    "manifest_version": 2,
+    "name": "Tip for help",
+    "description": "Pay tips for people who helped you in something.",
+    "version": "0.4",
+
+    "browser_action": {
+        "default_icon": "icon_16.png"
+    },
+
+    "permissions": [
+        // "contextMenus",
+        // "activeTab",
+        // "tabs",
+        "https://tips-for-help.com/*"
+    ],
+
+    "icons": {
+        "16": "icon_16.png",
+        "32": "icon_32.png"
+    },
+
+    "content_scripts": [{
+        "matches": [
+            "https://gitter.im/*",
+            "http://stackoverflow.com/*",
+            "https://stackoverflow.com/*"
+        ],
+        "js": ["build/app.js"],
+        "css": ["build/app.css"],
+        "all_frames": true
+    }]
+}
