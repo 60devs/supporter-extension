@@ -2,16 +2,19 @@
     "manifest_version": 2,
     "name": "Tips by 60 Devs",
     "description": "Be rewarded for helping others. Start receiving gratuities from thankful individuals.",
-    "version": "0.5",
+    "version": "0.6",
 
-    "browser_action": {
-        "default_icon": "icon_128.png"
+    "page_action": {
+        "default_title": "Tips by 60 Devs",
+        "default_icon": {
+            "38": "icon_38.png"
+        }
     },
 
     "permissions": [
         // "contextMenus",
         // "activeTab",
-        // "tabs",
+        "tabs",
         "https://tips.60devs.com/*"
     ],
 
