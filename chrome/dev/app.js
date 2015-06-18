@@ -33,7 +33,7 @@ class BaseAgent {
     discoverUsers(users) {
         var xhr = new XMLHttpRequest;
 
-        xhr.open("POST", `https://tips.60devs.com/api/status/${this.type}`, true);
+        xhr.open("POST", `https://tips.60devs.com/api/status/${this.providerType}`, true);
         xhr.setRequestHeader("Content-type", "application/json");
         xhr.send(JSON.stringify(users));
         xhr.onreadystatechange = () => {
@@ -57,7 +57,7 @@ class BaseAgent {
 class GitterAgent extends BaseAgent {
     constructor() {
         super();
-        this.type = "gitter";
+        this.providerType = "github";
     }
 
     start() {
@@ -139,7 +139,7 @@ class GitterAgent extends BaseAgent {
 class StackOverflowAgent extends BaseAgent {
     constructor() {
         super();
-        this.type = "stackoverflow";
+        this.providerType = "stackoverflow";
     }
 
     start() {
