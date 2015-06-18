@@ -31,28 +31,20 @@ class BaseAgent {
     }
 
     discoverUsers(users) {
-        setTimeout(() => {
-            var items = {};
-
-            for(var user of users)
-                items[user] = true;
-
-            this.onDiscoverUsersSuccess(items);
-        }, 400);
-
-        return ;
         var xhr = new XMLHttpRequest;
 
-        xhr.open("/check/github", "POST", true);
+        xhr.open("POST", `https://tips.60devs.com/api/status/${this.type}`, true);
         xhr.setRequestHeader("Content-type", "application/json");
         xhr.send(JSON.stringify(users));
-        xhr.onstatechange = () => {
+        xhr.onreadystatechange = () => {
             if(xhr.readyState == 4 && xhr.status == 200)
                 this.onDiscoverUsersSuccess(xhr.responseText);
         }
     }
 
-    onDiscoverUsersSuccess(items) {
+    onDiscoverUsersSuccess(responseText) {
+        var items = JSON.parse(responseText);
+
         for(let user in items) {
             if(items[user])
                 this.users.push(user);
@@ -91,7 +83,7 @@ class GitterAgent extends BaseAgent {
         var nodes,
             users = [];
 
-        nodes = document.querySelectorAll(".chat-item.burstStart[data-item-id]:not(.t-user) .js-chat-item-from");
+        nodes = document.querySelectorAll(".chat-item.burstStart:not(.t-user) .js-chat-item-from");
         nodes = [].slice.call(nodes);
 
         for(let node of nodes) {
@@ -114,7 +106,7 @@ class GitterAgent extends BaseAgent {
         var template = document.createElement("template");
 
         template.innerHTML = `
-            <a href="http://tips-for-help.com/pay/github/${user}" target="_blank" class="t-button">
+            <a href="http://tips.60devs.com/#/pay/github/${user}" target="_blank" class="t-ext-button t-ext-gitter-button">
                 ${Utils.t("leave tips")}
             </a>`
 
@@ -124,21 +116,21 @@ class GitterAgent extends BaseAgent {
     render() {
         var nodes;
 
-        nodes = document.querySelectorAll(".t-user[data-item-id] .js-chat-item-from");
+        nodes = document.querySelectorAll(".t-user .js-chat-item-from");
         nodes = [].slice.call(nodes);
 
         for(let node of nodes) {
             var chatItemNode = Utils.getParentByCls(node, "t-user"),
                 user = node.textContent.trim();
 
-            if(this.user == user || chatItemNode.querySelector(".t-button"))
+            if(this.user == user || chatItemNode.querySelector(".t-ext-button"))
                 continue;
 
             if(this.users.indexOf(user) > -1) {
                 var button = this.renderButton(user),
-                    placeholder = chatItemNode.querySelector(".js-chat-item-details");
+                    placeholder = chatItemNode.querySelector(".chat-item__details");
 
-                placeholder.appendChild(button);
+                placeholder.insertBefore(button, placeholder.querySelector('.chat-item__time'));
             }
         }
     }
@@ -196,7 +188,7 @@ class StackOverflowAgent extends BaseAgent {
         var template = document.createElement("template");
 
         template.innerHTML = `
-            <a href="http://tips-for-help.com/pay/stackoverflow/${user}" target="_blank" class="t-button t-stackoverflow-button">
+            <a href="http://tips.60devs.com/#/pay/stackoverflow/${user}" target="_blank" class="t-ext-button t-ext-stackoverflow-button">
                 ${Utils.t("leave tips")}
             </a>`
 
@@ -213,7 +205,7 @@ class StackOverflowAgent extends BaseAgent {
             var answerNode = Utils.getParentByCls(node, "t-user"),
                 user = node.getAttribute("href").match(/\d+/)[0];
 
-            if(this.user == user || answerNode.querySelector(".t-button"))
+            if(this.user == user || answerNode.querySelector(".t-ext-button"))
                 continue;
 
             if(this.users.indexOf(user) > -1) {
@@ -228,8 +220,10 @@ class StackOverflowAgent extends BaseAgent {
 
 class Application {
     constructor() {
-        this.initAgent();
-        this.agent.start();
+        if(/^tips\.60devs/.test(location.hostname))
+            this.init60DevsSite();
+        else
+            this.initAgent();
     }
 
     initAgent() {
@@ -242,7 +236,20 @@ class Application {
         if(/^gitter\.im$/.test(host))
             agent = GitterAgent;
 
-        this.agent = new agent;
+        if(agent) {
+            this.agent = new agent;
+            this.agent.start();
+        }
+
+        // chrome.runtime.sendMessage("changeicon", this.getIconPath(!! agent));
+    }
+
+    init60DevsSite() {
+        window.tipsExtensionInstalled = true;
+    }
+
+    getIconPath(active) {
+        return active ? "../icon_active_64.png" : "../icon_64.png";
     }
 }
 

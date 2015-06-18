@@ -49,50 +49,20 @@ var BaseAgent = (function () {
         value: function discoverUsers(users) {
             var _this2 = this;
 
-            setTimeout(function () {
-                var items = {};
-
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = users[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var user = _step.value;
-
-                        items[user] = true;
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator["return"]) {
-                            _iterator["return"]();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-
-                _this2.onDiscoverUsersSuccess(items);
-            }, 400);
-
-            return;
             var xhr = new XMLHttpRequest();
 
-            xhr.open("/check/github", "POST", true);
+            xhr.open("POST", "https://tips.60devs.com/api/status/" + this.type, true);
             xhr.setRequestHeader("Content-type", "application/json");
             xhr.send(JSON.stringify(users));
-            xhr.onstatechange = function () {
+            xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && xhr.status == 200) _this2.onDiscoverUsersSuccess(xhr.responseText);
             };
         }
     }, {
         key: "onDiscoverUsersSuccess",
-        value: function onDiscoverUsersSuccess(items) {
+        value: function onDiscoverUsersSuccess(responseText) {
+            var items = JSON.parse(responseText);
+
             for (var user in items) {
                 if (items[user]) this.users.push(user);
             }
@@ -139,19 +109,46 @@ var GitterAgent = (function (_BaseAgent) {
             var nodes,
                 users = [];
 
-            nodes = document.querySelectorAll(".chat-item.burstStart[data-item-id]:not(.t-user) .js-chat-item-from");
+            nodes = document.querySelectorAll(".chat-item.burstStart:not(.t-user) .js-chat-item-from");
             nodes = [].slice.call(nodes);
+
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = nodes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var node = _step.value;
+
+                    users.push(node.textContent.trim());
+                    Utils.getParentByCls(node, "chat-item").classList.add("t-user");
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator["return"]) {
+                        _iterator["return"]();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            var unknownUsers = [];
 
             var _iteratorNormalCompletion2 = true;
             var _didIteratorError2 = false;
             var _iteratorError2 = undefined;
 
             try {
-                for (var _iterator2 = nodes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var node = _step2.value;
+                for (var _iterator2 = users[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var user = _step2.value;
 
-                    users.push(node.textContent.trim());
-                    Utils.getParentByCls(node, "chat-item").classList.add("t-user");
+                    if (this.users.indexOf(user) == -1) unknownUsers.push(user);
                 }
             } catch (err) {
                 _didIteratorError2 = true;
@@ -168,17 +165,44 @@ var GitterAgent = (function (_BaseAgent) {
                 }
             }
 
-            var unknownUsers = [];
+            if (unknownUsers.length > 0) this.discoverUsers(unknownUsers);
+        }
+    }, {
+        key: "renderButton",
+        value: function renderButton(user) {
+            var template = document.createElement("template");
+
+            template.innerHTML = "\n            <a href=\"http://tips.60devs.com/#/pay/github/" + user + "\" target=\"_blank\" class=\"t-ext-button t-ext-gitter-button\">\n                " + Utils.t("leave tips") + "\n            </a>";
+
+            return template.content;
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var nodes;
+
+            nodes = document.querySelectorAll(".t-user .js-chat-item-from");
+            nodes = [].slice.call(nodes);
 
             var _iteratorNormalCompletion3 = true;
             var _didIteratorError3 = false;
             var _iteratorError3 = undefined;
 
             try {
-                for (var _iterator3 = users[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                    var user = _step3.value;
+                for (var _iterator3 = nodes[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    var node = _step3.value;
 
-                    if (this.users.indexOf(user) == -1) unknownUsers.push(user);
+                    var chatItemNode = Utils.getParentByCls(node, "t-user"),
+                        user = node.textContent.trim();
+
+                    if (this.user == user || chatItemNode.querySelector(".t-ext-button")) continue;
+
+                    if (this.users.indexOf(user) > -1) {
+                        var button = this.renderButton(user),
+                            placeholder = chatItemNode.querySelector(".chat-item__details");
+
+                        placeholder.insertBefore(button, placeholder.querySelector(".chat-item__time"));
+                    }
                 }
             } catch (err) {
                 _didIteratorError3 = true;
@@ -191,60 +215,6 @@ var GitterAgent = (function (_BaseAgent) {
                 } finally {
                     if (_didIteratorError3) {
                         throw _iteratorError3;
-                    }
-                }
-            }
-
-            if (unknownUsers.length > 0) this.discoverUsers(unknownUsers);
-        }
-    }, {
-        key: "renderButton",
-        value: function renderButton(user) {
-            var template = document.createElement("template");
-
-            template.innerHTML = "\n            <a href=\"http://tips-for-help.com/pay/github/" + user + "\" target=\"_blank\" class=\"t-button\">\n                " + Utils.t("leave tips") + "\n            </a>";
-
-            return template.content;
-        }
-    }, {
-        key: "render",
-        value: function render() {
-            var nodes;
-
-            nodes = document.querySelectorAll(".t-user[data-item-id] .js-chat-item-from");
-            nodes = [].slice.call(nodes);
-
-            var _iteratorNormalCompletion4 = true;
-            var _didIteratorError4 = false;
-            var _iteratorError4 = undefined;
-
-            try {
-                for (var _iterator4 = nodes[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                    var node = _step4.value;
-
-                    var chatItemNode = Utils.getParentByCls(node, "t-user"),
-                        user = node.textContent.trim();
-
-                    if (this.user == user || chatItemNode.querySelector(".t-button")) continue;
-
-                    if (this.users.indexOf(user) > -1) {
-                        var button = this.renderButton(user),
-                            placeholder = chatItemNode.querySelector(".js-chat-item-details");
-
-                        placeholder.appendChild(button);
-                    }
-                }
-            } catch (err) {
-                _didIteratorError4 = true;
-                _iteratorError4 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion4 && _iterator4["return"]) {
-                        _iterator4["return"]();
-                    }
-                } finally {
-                    if (_didIteratorError4) {
-                        throw _iteratorError4;
                     }
                 }
             }
@@ -293,16 +263,43 @@ var StackOverflowAgent = (function (_BaseAgent2) {
             nodes = document.querySelectorAll(".answer:not(.t-user) .user-info:last-child .user-details a");
             nodes = [].slice.call(nodes);
 
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
+
+            try {
+                for (var _iterator4 = nodes[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var node = _step4.value;
+
+                    users.push(node.getAttribute("href").match(/\d+/)[0]);
+                    Utils.getParentByCls(node, "answer").classList.add("t-user");
+                }
+            } catch (err) {
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion4 && _iterator4["return"]) {
+                        _iterator4["return"]();
+                    }
+                } finally {
+                    if (_didIteratorError4) {
+                        throw _iteratorError4;
+                    }
+                }
+            }
+
+            var unknownUsers = [];
+
             var _iteratorNormalCompletion5 = true;
             var _didIteratorError5 = false;
             var _iteratorError5 = undefined;
 
             try {
-                for (var _iterator5 = nodes[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                    var node = _step5.value;
+                for (var _iterator5 = users[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                    var user = _step5.value;
 
-                    users.push(node.getAttribute("href").match(/\d+/)[0]);
-                    Utils.getParentByCls(node, "answer").classList.add("t-user");
+                    if (this.users.indexOf(user) == -1) unknownUsers.push(user);
                 }
             } catch (err) {
                 _didIteratorError5 = true;
@@ -319,17 +316,44 @@ var StackOverflowAgent = (function (_BaseAgent2) {
                 }
             }
 
-            var unknownUsers = [];
+            if (unknownUsers.length > 0) this.discoverUsers(unknownUsers);
+        }
+    }, {
+        key: "renderButton",
+        value: function renderButton(user) {
+            var template = document.createElement("template");
+
+            template.innerHTML = "\n            <a href=\"http://tips.60devs.com/#/pay/stackoverflow/" + user + "\" target=\"_blank\" class=\"t-ext-button t-ext-stackoverflow-button\">\n                " + Utils.t("leave tips") + "\n            </a>";
+
+            return template.content;
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var nodes;
+
+            nodes = document.querySelectorAll(".t-user .user-info:last-child .user-details a");
+            nodes = [].slice.call(nodes);
 
             var _iteratorNormalCompletion6 = true;
             var _didIteratorError6 = false;
             var _iteratorError6 = undefined;
 
             try {
-                for (var _iterator6 = users[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                    var user = _step6.value;
+                for (var _iterator6 = nodes[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                    var node = _step6.value;
 
-                    if (this.users.indexOf(user) == -1) unknownUsers.push(user);
+                    var answerNode = Utils.getParentByCls(node, "t-user"),
+                        user = node.getAttribute("href").match(/\d+/)[0];
+
+                    if (this.user == user || answerNode.querySelector(".t-ext-button")) continue;
+
+                    if (this.users.indexOf(user) > -1) {
+                        var button = this.renderButton(user),
+                            placeholder = answerNode.querySelector(".vt > .post-menu");
+
+                        placeholder.appendChild(button);
+                    }
                 }
             } catch (err) {
                 _didIteratorError6 = true;
@@ -345,60 +369,6 @@ var StackOverflowAgent = (function (_BaseAgent2) {
                     }
                 }
             }
-
-            if (unknownUsers.length > 0) this.discoverUsers(unknownUsers);
-        }
-    }, {
-        key: "renderButton",
-        value: function renderButton(user) {
-            var template = document.createElement("template");
-
-            template.innerHTML = "\n            <a href=\"http://tips-for-help.com/pay/stackoverflow/" + user + "\" target=\"_blank\" class=\"t-button t-stackoverflow-button\">\n                " + Utils.t("leave tips") + "\n            </a>";
-
-            return template.content;
-        }
-    }, {
-        key: "render",
-        value: function render() {
-            var nodes;
-
-            nodes = document.querySelectorAll(".t-user .user-info:last-child .user-details a");
-            nodes = [].slice.call(nodes);
-
-            var _iteratorNormalCompletion7 = true;
-            var _didIteratorError7 = false;
-            var _iteratorError7 = undefined;
-
-            try {
-                for (var _iterator7 = nodes[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-                    var node = _step7.value;
-
-                    var answerNode = Utils.getParentByCls(node, "t-user"),
-                        user = node.getAttribute("href").match(/\d+/)[0];
-
-                    if (this.user == user || answerNode.querySelector(".t-button")) continue;
-
-                    if (this.users.indexOf(user) > -1) {
-                        var button = this.renderButton(user),
-                            placeholder = answerNode.querySelector(".vt > .post-menu");
-
-                        placeholder.appendChild(button);
-                    }
-                }
-            } catch (err) {
-                _didIteratorError7 = true;
-                _iteratorError7 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion7 && _iterator7["return"]) {
-                        _iterator7["return"]();
-                    }
-                } finally {
-                    if (_didIteratorError7) {
-                        throw _iteratorError7;
-                    }
-                }
-            }
         }
     }]);
 
@@ -409,8 +379,7 @@ var Application = (function () {
     function Application() {
         _classCallCheck(this, Application);
 
-        this.initAgent();
-        this.agent.start();
+        if (/^tips\.60devs/.test(location.hostname)) this.init60DevsSite();else this.initAgent();
     }
 
     _createClass(Application, [{
@@ -423,7 +392,22 @@ var Application = (function () {
 
             if (/^gitter\.im$/.test(host)) agent = GitterAgent;
 
-            this.agent = new agent();
+            if (agent) {
+                this.agent = new agent();
+                this.agent.start();
+            }
+
+            // chrome.runtime.sendMessage("changeicon", this.getIconPath(!! agent));
+        }
+    }, {
+        key: "init60DevsSite",
+        value: function init60DevsSite() {
+            window.tipsExtensionInstalled = true;
+        }
+    }, {
+        key: "getIconPath",
+        value: function getIconPath(active) {
+            return active ? "../icon_active_64.png" : "../icon_64.png";
         }
     }]);
 

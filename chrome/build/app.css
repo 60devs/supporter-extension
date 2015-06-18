@@ -1,14 +1,23 @@
-.t-button {
-    float: right;
-    color: #999;
+.t-ext-button {
     cursor: pointer;
+    text-decoration: none !important;
 }
 
-.t-button:hover {
-    color: #333;
-    text-decoration: underline;
+.t-ext-button:hover {
+    color: #30a7fc !important;
 }
 
-.t-stackoverflow-button {
+.t-ext-gitter-button {
+    color: #999;
+    vertical-align: middle;
+    margin: 4px 0 0 10px;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.t-ext-stackoverflow-button {
     float: none;
+    color: #888;
+    display: inline-block;
+    vertical-align: middle;
 }

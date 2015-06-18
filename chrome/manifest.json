@@ -1,33 +1,38 @@
 {
     "manifest_version": 2,
-    "name": "Tip for help",
-    "description": "Pay tips for people who helped you in something.",
-    "version": "0.4",
+    "name": "Tips by 60 Devs",
+    "description": "Be rewarded for helping others. Start receiving gratuities from thankful individuals.",
+    "version": "0.5",
 
     "browser_action": {
-        "default_icon": "icon_16.png"
+        "default_icon": "icon_128.png"
     },
 
     "permissions": [
         // "contextMenus",
         // "activeTab",
         // "tabs",
-        "https://tips-for-help.com/*"
+        "https://tips.60devs.com/*"
     ],
 
     "icons": {
-        "16": "icon_16.png",
-        "32": "icon_32.png"
+        "64": "icon_64.png",
+        "128": "icon_128.png"
     },
 
     "content_scripts": [{
         "matches": [
             "https://gitter.im/*",
             "http://stackoverflow.com/*",
-            "https://stackoverflow.com/*"
+            "https://stackoverflow.com/*",
+            "https://tips.60devs.com/*"
         ],
         "js": ["build/app.js"],
         "css": ["build/app.css"],
         "all_frames": true
-    }]
+    }],
+
+    "background": {
+        "scripts": ["build/background.js"]
+    }
 }
