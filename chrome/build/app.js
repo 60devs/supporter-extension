@@ -394,13 +394,14 @@ var Application = (function () {
                 this.agent = new agent();
                 this.agent.start();
             }
-
-            // chrome.runtime.sendMessage("changeicon", this.getIconPath(!! agent));
         }
     }, {
         key: "init60DevsSite",
         value: function init60DevsSite() {
-            window.tipsExtensionInstalled = true;
+            var div = document.createElement("div");
+            div.id = "extension-installed";
+
+            document.body.appendChild(div);
         }
     }, {
         key: "getIconPath",

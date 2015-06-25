@@ -240,12 +240,13 @@ class Application {
             this.agent = new agent;
             this.agent.start();
         }
-
-        // chrome.runtime.sendMessage("changeicon", this.getIconPath(!! agent));
     }
 
     init60DevsSite() {
-        window.tipsExtensionInstalled = true;
+        var div = document.createElement("div");
+        div.id = "extension-installed";
+
+        document.body.appendChild(div);
     }
 
     getIconPath(active) {
