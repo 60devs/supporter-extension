@@ -147,8 +147,6 @@ class GithubAgent extends BaseAgent {
             childList: true,
             subtree: true
         });
-
-        this.onDomChange();
     }
 
     initUser() {
