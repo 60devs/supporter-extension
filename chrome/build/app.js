@@ -62,7 +62,7 @@ var BaseAgent = (function () {
             var items = JSON.parse(responseText);
 
             for (var user in items) {
-                if (items[user]) this.users.push(user);
+                if (items[user] !== undefined) this.users.push(user);
             }
 
             this.render();
@@ -222,17 +222,17 @@ var GitterAgent = (function (_BaseAgent) {
     return GitterAgent;
 })(BaseAgent);
 
-var StackOverflowAgent = (function (_BaseAgent2) {
-    function StackOverflowAgent() {
-        _classCallCheck(this, StackOverflowAgent);
+var GithubAgent = (function (_BaseAgent2) {
+    function GithubAgent() {
+        _classCallCheck(this, GithubAgent);
 
-        _get(Object.getPrototypeOf(StackOverflowAgent.prototype), "constructor", this).call(this);
-        this.providerType = "stackoverflow";
+        _get(Object.getPrototypeOf(GithubAgent.prototype), "constructor", this).call(this);
+        this.providerType = "github";
     }
 
-    _inherits(StackOverflowAgent, _BaseAgent2);
+    _inherits(GithubAgent, _BaseAgent2);
 
-    _createClass(StackOverflowAgent, [{
+    _createClass(GithubAgent, [{
         key: "start",
         value: function start() {
             new MutationObserver(this.onDomChange.bind(this)).observe(document, {
@@ -246,19 +246,26 @@ var StackOverflowAgent = (function (_BaseAgent2) {
             if (this.user) return;
 
             try {
-                var href = document.querySelector(".profile-me").getAttribute("href"),
-                    user = href.match(/\d+/)[0];
-
-                this.user = user;
+                this.user = document.head.querySelector("meta[name='octolytics-actor-login']").getAttribute("content").trim();
             } catch (e) {}
         }
     }, {
         key: "initUnknownUsers",
         value: function initUnknownUsers() {
+            if (this.isIssuesPage()) this.initUnknownUsersOnIssuesPage();else this.initUnknownUsersOnProfilePage();
+        }
+    }, {
+        key: "isIssuesPage",
+        value: function isIssuesPage() {
+            return !!document.getElementById("show_issue");
+        }
+    }, {
+        key: "initUnknownUsersOnIssuesPage",
+        value: function initUnknownUsersOnIssuesPage() {
             var nodes,
                 users = [];
 
-            nodes = document.querySelectorAll(".answer:not(.t-user) .user-info:last-child .user-details a");
+            nodes = document.querySelectorAll("#show_issue .js-comment-container:not(.t-user) .timeline-comment-avatar");
             nodes = [].slice.call(nodes);
 
             var _iteratorNormalCompletion4 = true;
@@ -269,8 +276,8 @@ var StackOverflowAgent = (function (_BaseAgent2) {
                 for (var _iterator4 = nodes[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
                     var node = _step4.value;
 
-                    users.push(node.getAttribute("href").match(/\d+/)[0]);
-                    Utils.getParentByCls(node, "answer").classList.add("t-user");
+                    users.push(node.getAttribute("alt").substring(1));
+                    Utils.getParentByCls(node, "js-comment-container").classList.add("t-user");
                 }
             } catch (err) {
                 _didIteratorError4 = true;
@@ -317,6 +324,184 @@ var StackOverflowAgent = (function (_BaseAgent2) {
             if (unknownUsers.length > 0) this.discoverUsers(unknownUsers);
         }
     }, {
+        key: "initUnknownUsersOnProfilePage",
+        value: function initUnknownUsersOnProfilePage() {
+            var userNode = document.querySelector(".profilecols .vcard-names .vcard-username:not(.t-user)"),
+                user;
+
+            if (!userNode) return;
+
+            userNode.classList.add("t-user");
+            user = userNode.textContent.trim();
+
+            if (this.users.indexOf(user) == -1) this.discoverUsers([user]);
+        }
+    }, {
+        key: "renderButton",
+        value: function renderButton(user) {
+            var template = document.createElement("template");
+
+            template.innerHTML = "\n            <a href=\"http://tips.60devs.com/#/pay/github/" + user + "\" target=\"_blank\" class=\"t-ext-button t-ext-github-button\">\n                " + Utils.t("leave tips") + "\n            </a>";
+
+            return template.content;
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            if (this.isIssuesPage()) this.renderOnIssuesPage();else this.renderOnProfilePage();
+        }
+    }, {
+        key: "renderOnIssuesPage",
+        value: function renderOnIssuesPage() {
+            var nodes,
+                users = [];
+
+            nodes = document.querySelectorAll("#show_issue .t-user");
+            nodes = [].slice.call(nodes);
+
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
+
+            try {
+                for (var _iterator6 = nodes[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                    var node = _step6.value;
+
+                    var user = node.querySelector(".timeline-comment-avatar").getAttribute("alt");
+                    user = user.substring(1).trim();
+
+                    if (this.user == user || node.querySelector(".t-ext-button")) continue;
+
+                    if (this.users.indexOf(user) > -1) node.appendChild(this.renderButton(user));
+                }
+            } catch (err) {
+                _didIteratorError6 = true;
+                _iteratorError6 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion6 && _iterator6["return"]) {
+                        _iterator6["return"]();
+                    }
+                } finally {
+                    if (_didIteratorError6) {
+                        throw _iteratorError6;
+                    }
+                }
+            }
+        }
+    }, {
+        key: "renderOnProfilePage",
+        value: function renderOnProfilePage() {
+            try {
+                var profileNode = document.querySelector(".profilecols .vcard"),
+                    userNode = profileNode.querySelector(".vcard-names .vcard-username"),
+                    user = userNode.textContent.trim();
+
+                if (this.user == user || this.users.indexOf(user) == -1 || profileNode.querySelector(".t-ext-button")) return;
+
+                profileNode.insertBefore(this.renderButton(user), profileNode.querySelector(".vcard-details"));
+            } catch (e) {}
+        }
+    }]);
+
+    return GithubAgent;
+})(BaseAgent);
+
+var StackOverflowAgent = (function (_BaseAgent3) {
+    function StackOverflowAgent() {
+        _classCallCheck(this, StackOverflowAgent);
+
+        _get(Object.getPrototypeOf(StackOverflowAgent.prototype), "constructor", this).call(this);
+        this.providerType = "stackoverflow";
+    }
+
+    _inherits(StackOverflowAgent, _BaseAgent3);
+
+    _createClass(StackOverflowAgent, [{
+        key: "start",
+        value: function start() {
+            new MutationObserver(this.onDomChange.bind(this)).observe(document, {
+                childList: true,
+                subtree: true
+            });
+        }
+    }, {
+        key: "initUser",
+        value: function initUser() {
+            if (this.user) return;
+
+            try {
+                var href = document.querySelector(".profile-me").getAttribute("href"),
+                    user = href.match(/\d+/)[0];
+
+                this.user = user;
+            } catch (e) {}
+        }
+    }, {
+        key: "initUnknownUsers",
+        value: function initUnknownUsers() {
+            var nodes,
+                users = [];
+
+            nodes = document.querySelectorAll(".answer:not(.t-user) .user-info:last-child .user-details a");
+            nodes = [].slice.call(nodes);
+
+            var _iteratorNormalCompletion7 = true;
+            var _didIteratorError7 = false;
+            var _iteratorError7 = undefined;
+
+            try {
+                for (var _iterator7 = nodes[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                    var node = _step7.value;
+
+                    users.push(node.getAttribute("href").match(/\d+/)[0]);
+                    Utils.getParentByCls(node, "answer").classList.add("t-user");
+                }
+            } catch (err) {
+                _didIteratorError7 = true;
+                _iteratorError7 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion7 && _iterator7["return"]) {
+                        _iterator7["return"]();
+                    }
+                } finally {
+                    if (_didIteratorError7) {
+                        throw _iteratorError7;
+                    }
+                }
+            }
+
+            var unknownUsers = [];
+
+            var _iteratorNormalCompletion8 = true;
+            var _didIteratorError8 = false;
+            var _iteratorError8 = undefined;
+
+            try {
+                for (var _iterator8 = users[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                    var user = _step8.value;
+
+                    if (this.users.indexOf(user) == -1) unknownUsers.push(user);
+                }
+            } catch (err) {
+                _didIteratorError8 = true;
+                _iteratorError8 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion8 && _iterator8["return"]) {
+                        _iterator8["return"]();
+                    }
+                } finally {
+                    if (_didIteratorError8) {
+                        throw _iteratorError8;
+                    }
+                }
+            }
+
+            if (unknownUsers.length > 0) this.discoverUsers(unknownUsers);
+        }
+    }, {
         key: "renderButton",
         value: function renderButton(user) {
             var template = document.createElement("template");
@@ -333,13 +518,13 @@ var StackOverflowAgent = (function (_BaseAgent2) {
             nodes = document.querySelectorAll(".t-user .user-info:last-child .user-details a");
             nodes = [].slice.call(nodes);
 
-            var _iteratorNormalCompletion6 = true;
-            var _didIteratorError6 = false;
-            var _iteratorError6 = undefined;
+            var _iteratorNormalCompletion9 = true;
+            var _didIteratorError9 = false;
+            var _iteratorError9 = undefined;
 
             try {
-                for (var _iterator6 = nodes[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                    var node = _step6.value;
+                for (var _iterator9 = nodes[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                    var node = _step9.value;
 
                     var answerNode = Utils.getParentByCls(node, "t-user"),
                         user = node.getAttribute("href").match(/\d+/)[0];
@@ -354,16 +539,16 @@ var StackOverflowAgent = (function (_BaseAgent2) {
                     }
                 }
             } catch (err) {
-                _didIteratorError6 = true;
-                _iteratorError6 = err;
+                _didIteratorError9 = true;
+                _iteratorError9 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion6 && _iterator6["return"]) {
-                        _iterator6["return"]();
+                    if (!_iteratorNormalCompletion9 && _iterator9["return"]) {
+                        _iterator9["return"]();
                     }
                 } finally {
-                    if (_didIteratorError6) {
-                        throw _iteratorError6;
+                    if (_didIteratorError9) {
+                        throw _iteratorError9;
                     }
                 }
             }
@@ -389,6 +574,8 @@ var Application = (function () {
             if (/^stackoverflow\.com$/.test(host)) agent = StackOverflowAgent;
 
             if (/^gitter\.im$/.test(host)) agent = GitterAgent;
+
+            if (/^github\.com/.test(host)) agent = GithubAgent;
 
             if (agent) {
                 this.agent = new agent();

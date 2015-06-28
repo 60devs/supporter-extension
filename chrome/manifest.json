@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Tips by 60 Devs",
     "description": "Be rewarded for helping others. Start receiving gratuities from thankful individuals.",
-    "version": "0.8",
+    "version": "0.9",
 
     "page_action": {
         "default_title": "Tips by 60devs",
@@ -23,9 +23,10 @@
 
     "content_scripts": [{
         "matches": [
-            "https://gitter.im/*",
+            "https://github.com/*",
             "http://stackoverflow.com/*",
             "https://stackoverflow.com/*",
+            "https://gitter.im/*",
             "https://tips.60devs.com/*"
         ],
         "js": ["build/app.js"],

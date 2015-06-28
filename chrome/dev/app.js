@@ -46,7 +46,7 @@ class BaseAgent {
         var items = JSON.parse(responseText);
 
         for(let user in items) {
-            if(items[user])
+            if(items[user] !== undefined)
                 this.users.push(user);
         }
 
@@ -133,6 +133,127 @@ class GitterAgent extends BaseAgent {
                 placeholder.insertBefore(button, placeholder.querySelector('.chat-item__time'));
             }
         }
+    }
+}
+
+class GithubAgent extends BaseAgent {
+    constructor() {
+        super();
+        this.providerType = "github";
+    }
+
+    start() {
+        new MutationObserver(this.onDomChange.bind(this)).observe(document, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    initUser() {
+        if(this.user)
+            return ;
+
+        try {
+            this.user = document.head.querySelector("meta[name='octolytics-actor-login']").getAttribute("content").trim();
+        } catch(e) {}
+    }
+
+    initUnknownUsers() {
+        if(this.isIssuesPage())
+            this.initUnknownUsersOnIssuesPage();
+        else
+            this.initUnknownUsersOnProfilePage();
+    }
+
+    isIssuesPage() {
+        return !! document.getElementById("show_issue");
+    }
+
+    initUnknownUsersOnIssuesPage() {
+        var nodes,
+            users = [];
+            
+        nodes = document.querySelectorAll("#show_issue .js-comment-container:not(.t-user) .timeline-comment-avatar");
+        nodes = [].slice.call(nodes);
+
+        for(let node of nodes) {
+            users.push(node.getAttribute("alt").substring(1));
+            Utils.getParentByCls(node, "js-comment-container").classList.add("t-user");
+        }
+
+        var unknownUsers = [];
+
+        for(let user of users) {
+            if(this.users.indexOf(user) == -1)
+                unknownUsers.push(user);
+        }
+
+        if(unknownUsers.length > 0)
+            this.discoverUsers(unknownUsers);
+    }
+
+    initUnknownUsersOnProfilePage() {
+        var userNode = document.querySelector(".profilecols .vcard-names .vcard-username:not(.t-user)"),
+            user;
+
+        if(! userNode)
+            return ;
+
+        userNode.classList.add("t-user");
+        user = userNode.textContent.trim();
+
+        if(this.users.indexOf(user) == -1)
+            this.discoverUsers([user]);
+    }
+
+    renderButton(user) {
+        var template = document.createElement("template");
+
+        template.innerHTML = `
+            <a href="http://tips.60devs.com/#/pay/github/${user}" target="_blank" class="t-ext-button t-ext-github-button">
+                ${Utils.t("leave tips")}
+            </a>`
+
+        return template.content;
+    }
+
+    render() {
+        if(this.isIssuesPage()) 
+            this.renderOnIssuesPage();
+        else
+            this.renderOnProfilePage();
+    }
+
+    renderOnIssuesPage() {
+        var nodes,
+            users = [];
+            
+        nodes = document.querySelectorAll("#show_issue .t-user");
+        nodes = [].slice.call(nodes);
+
+        for(let node of nodes) {
+            var user = node.querySelector(".timeline-comment-avatar").getAttribute("alt");
+            user = user.substring(1).trim();
+            
+            if(this.user == user || node.querySelector(".t-ext-button"))
+                continue;
+
+            if(this.users.indexOf(user) > -1)
+                node.appendChild(this.renderButton(user));
+        }
+    }
+
+    renderOnProfilePage() {
+        try {
+            var profileNode = document.querySelector(".profilecols .vcard"),
+                userNode = profileNode.querySelector(".vcard-names .vcard-username"),
+                user = userNode.textContent.trim();
+
+            if(this.user == user || this.users.indexOf(user) == -1 || profileNode.querySelector(".t-ext-button"))
+                return ;
+
+            profileNode.insertBefore(this.renderButton(user), profileNode.querySelector(".vcard-details"));
+        } catch(e) {}
     }
 }
 
@@ -235,6 +356,9 @@ class Application {
 
         if(/^gitter\.im$/.test(host))
             agent = GitterAgent;
+
+        if(/^github\.com/.test(host))
+            agent = GithubAgent;
 
         if(agent) {
             this.agent = new agent;

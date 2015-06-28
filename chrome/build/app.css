@@ -21,3 +21,24 @@
     display: inline-block;
     vertical-align: middle;
 }
+
+.t-ext-github-button:hover {
+    text-decoration: underline !important;
+    color: #4078c0 !important;
+}
+
+.vcard .t-ext-github-button {
+    line-height: 30px;
+    text-align: center;
+    border-top: 1px solid #eee;
+    display: inline-block;
+    width: 100%;
+    color: #4078c0;
+}
+
+.js-issues-results .t-ext-github-button {
+    position: absolute;
+    top: 54px;
+    left: 0;
+    font-size: 11px;
+}

@@ -2,7 +2,7 @@ var onTabChange = (tab) => {
     var host = tab.url.split("://")[1],
         tabId = tab.id;
     
-    if(/^(gitter|stackoverflow)/.test(host))
+    if(/^(github|stackoverflow|gitter|tips\.60devs)/.test(host))
         chrome.pageAction.show(tabId);
     else
         chrome.pageAction.hide(tabId);
