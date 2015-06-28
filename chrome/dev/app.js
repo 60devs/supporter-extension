@@ -22,6 +22,7 @@ class BaseAgent {
     }
 
     start() {
+        this.onDomChange();
     }
 
     onDomChange() {
@@ -46,7 +47,7 @@ class BaseAgent {
         var items = JSON.parse(responseText);
 
         for(let user in items) {
-            if(items[user])
+            if(items[user] !== undefined)
                 this.users.push(user);
         }
 
@@ -64,6 +65,7 @@ class GitterAgent extends BaseAgent {
         if(window.top == window)
             return ;
 
+        super();
         new MutationObserver(this.onDomChange.bind(this)).observe(document, {
             childList: true,
             subtree: true
@@ -143,12 +145,11 @@ class GithubAgent extends BaseAgent {
     }
 
     start() {
+        super();
         new MutationObserver(this.onDomChange.bind(this)).observe(document, {
             childList: true,
             subtree: true
         });
-
-        this.onDomChange();
     }
 
     initUser() {
@@ -266,6 +267,7 @@ class StackOverflowAgent extends BaseAgent {
     }
 
     start() {
+        super();
         new MutationObserver(this.onDomChange.bind(this)).observe(document, {
             childList: true,
             subtree: true
