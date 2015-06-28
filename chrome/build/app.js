@@ -62,7 +62,7 @@ var BaseAgent = (function () {
             var items = JSON.parse(responseText);
 
             for (var user in items) {
-                if (items[user] !== undefined) this.users.push(user);
+                if (items[user]) this.users.push(user);
             }
 
             this.render();

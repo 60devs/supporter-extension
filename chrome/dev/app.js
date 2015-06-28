@@ -46,7 +46,7 @@ class BaseAgent {
         var items = JSON.parse(responseText);
 
         for(let user in items) {
-            if(items[user] !== undefined)
+            if(items[user])
                 this.users.push(user);
         }
 
