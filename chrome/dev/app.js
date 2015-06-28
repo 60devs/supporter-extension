@@ -47,7 +47,7 @@ class BaseAgent {
         var items = JSON.parse(responseText);
 
         for(let user in items) {
-            if(items[user] !== undefined)
+            if(items[user])
                 this.users.push(user);
         }
 
@@ -65,7 +65,7 @@ class GitterAgent extends BaseAgent {
         if(window.top == window)
             return ;
 
-        super();
+        super.start();
         new MutationObserver(this.onDomChange.bind(this)).observe(document, {
             childList: true,
             subtree: true
@@ -77,7 +77,17 @@ class GitterAgent extends BaseAgent {
             return ;
 
         try {
-            this.user = window.top.document.querySelector(".menu-header__profile .menu-header__name").textContent.trim();
+            var scripts = window.top.document.scripts;
+            scripts = [].slice.call(scripts);
+
+            for(let script of scripts) {
+                var matches = script.textContent.match(/\"username\"\:\"([^\"]+)\"/);
+
+                if(matches) {
+                    this.user = matches[1];
+                    break;
+                }
+            }
         } catch(e) {}
     }
 
@@ -145,7 +155,7 @@ class GithubAgent extends BaseAgent {
     }
 
     start() {
-        super();
+        super.start();
         new MutationObserver(this.onDomChange.bind(this)).observe(document, {
             childList: true,
             subtree: true
@@ -267,7 +277,7 @@ class StackOverflowAgent extends BaseAgent {
     }
 
     start() {
-        super();
+        super.start();
         new MutationObserver(this.onDomChange.bind(this)).observe(document, {
             childList: true,
             subtree: true
