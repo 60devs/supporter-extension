@@ -239,6 +239,8 @@ var GithubAgent = (function (_BaseAgent2) {
                 childList: true,
                 subtree: true
             });
+
+            this.onDomChange();
         }
     }, {
         key: "initUser",
