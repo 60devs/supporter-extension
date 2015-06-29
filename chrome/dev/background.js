@@ -15,3 +15,9 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
 chrome.tabs.onUpdated.addListener((tabId, changedInfo, tab) => {
     onTabChange(tab);
 });
+
+chrome.pageAction.onClicked.addListener((tab) => {
+    chrome.tabs.sendMessage(tab.id, {
+        action: "pageActionClick"
+    });
+});

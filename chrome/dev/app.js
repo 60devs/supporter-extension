@@ -19,10 +19,46 @@ class BaseAgent {
     constructor() {
         this.users = [];
         this.user = null;
+
+        chrome.runtime.onMessage.addListener(this.onExtensionMessage.bind(this));
     }
 
     start() {
         this.onDomChange();
+    }
+
+    onExtensionMessage(request) {
+        if (request.action == "pageActionClick")
+            this.onPageActionClick();
+    }
+
+    onPageActionClick() {
+        var button = document.querySelector(".t-ext-button");
+
+        if(button)
+            this.hightlightButton(button);
+        else
+            alert("No users who are able to accept tips on this page.");
+    }
+
+    hightlightButton(button) {
+        button.scrollIntoViewIfNeeded();
+
+        var overlay = document.createElement("div");
+        overlay.classList.add("t-ext-overlay");
+
+        document.body.appendChild(overlay);
+        document.body.classList.add("t-ext-attention-showing");
+
+        setTimeout(() => {
+            document.body.classList.remove("t-ext-attention-showing");
+            document.body.classList.add("t-ext-attention-hiding");
+
+            setTimeout(() => {
+                document.body.classList.remove("t-ext-attention-hiding");
+                overlay.parentNode.removeChild(overlay);
+            }, 500);
+        }, 1000);
     }
 
     onDomChange() {

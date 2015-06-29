@@ -30,12 +30,47 @@ var BaseAgent = (function () {
 
         this.users = [];
         this.user = null;
+
+        chrome.runtime.onMessage.addListener(this.onExtensionMessage.bind(this));
     }
 
     _createClass(BaseAgent, [{
         key: "start",
         value: function start() {
             this.onDomChange();
+        }
+    }, {
+        key: "onExtensionMessage",
+        value: function onExtensionMessage(request) {
+            if (request.action == "pageActionClick") this.onPageActionClick();
+        }
+    }, {
+        key: "onPageActionClick",
+        value: function onPageActionClick() {
+            var button = document.querySelector(".t-ext-button");
+
+            if (button) this.hightlightButton(button);else alert("No users who are able to accept tips on this page.");
+        }
+    }, {
+        key: "hightlightButton",
+        value: function hightlightButton(button) {
+            button.scrollIntoViewIfNeeded();
+
+            var overlay = document.createElement("div");
+            overlay.classList.add("t-ext-overlay");
+
+            document.body.appendChild(overlay);
+            document.body.classList.add("t-ext-attention-showing");
+
+            setTimeout(function () {
+                document.body.classList.remove("t-ext-attention-showing");
+                document.body.classList.add("t-ext-attention-hiding");
+
+                setTimeout(function () {
+                    document.body.classList.remove("t-ext-attention-hiding");
+                    overlay.parentNode.removeChild(overlay);
+                }, 500);
+            }, 1000);
         }
     }, {
         key: "onDomChange",

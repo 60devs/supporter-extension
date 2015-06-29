@@ -13,6 +13,7 @@
 
     "permissions": [
         "tabs",
+        "activeTab",
         "https://tips.60devs.com/*"
     ],
 
