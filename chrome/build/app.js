@@ -30,14 +30,13 @@ var BaseAgent = (function () {
 
         this.users = [];
         this.user = null;
-
-        chrome.runtime.onMessage.addListener(this.onExtensionMessage.bind(this));
     }
 
     _createClass(BaseAgent, [{
         key: "start",
         value: function start() {
             this.onDomChange();
+            chrome.runtime.onMessage.addListener(this.onExtensionMessage.bind(this));
         }
     }, {
         key: "onExtensionMessage",
@@ -114,6 +113,7 @@ var GitterAgent = (function (_BaseAgent) {
         _classCallCheck(this, GitterAgent);
 
         _get(Object.getPrototypeOf(GitterAgent.prototype), "constructor", this).call(this);
+        this.document = document;
         this.providerType = "github";
     }
 

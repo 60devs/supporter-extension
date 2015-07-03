@@ -19,12 +19,11 @@ class BaseAgent {
     constructor() {
         this.users = [];
         this.user = null;
-
-        chrome.runtime.onMessage.addListener(this.onExtensionMessage.bind(this));
     }
 
     start() {
         this.onDomChange();
+        chrome.runtime.onMessage.addListener(this.onExtensionMessage.bind(this));
     }
 
     onExtensionMessage(request) {
@@ -94,6 +93,7 @@ class BaseAgent {
 class GitterAgent extends BaseAgent {
     constructor() {
         super();
+        this.document = document;
         this.providerType = "github";
     }
 

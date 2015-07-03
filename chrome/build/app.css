@@ -72,6 +72,17 @@
     z-index: 1000;
 }
 
+.t-ext-attention-showing .vcard .t-ext-github-button {
+    color: #30a7fc !important;
+    position: relative;
+    border-top: 1px solid transparent;
+    z-index: 1000;
+}
+
+.t-ext-attention-showing .vcard .t-ext-github-button+.vcard-details {
+    border-top: 1px solid transparent;
+}
+
 @keyframes show-overlay {
     from {
         opacity: 0;
