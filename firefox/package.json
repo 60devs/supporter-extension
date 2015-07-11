@@ -1,0 +1,21 @@
+{
+  "title": "Tips by 60 Devs",
+  "name": "tips-extension",
+  "version": "0.1.0",
+  "description": "Reward developers who help you and be rewarded for helping others.",
+  "main": "index.js",
+  "author": "60devs",
+  "engines": {
+    "firefox": ">=38.0a1",
+    "fennec": ">=38.0a1"
+  },
+  "permissions": {
+    "private-browsing": true,
+    "cross-domain-content": ["https://github.com/",
+            "http://stackoverflow.com/",
+            "https://stackoverflow.com/",
+            "https://gitter.im/",
+            "https://tips.60devs.com/"]
+  },
+  "license": "MIT"
+}

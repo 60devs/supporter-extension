@@ -1,0 +1,23 @@
+{
+  "name": "tips-extension",
+  "version": "1.0.0",
+  "description": "Reward developers who help you and be rewarded for helping others.",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/60devs/tips-extension.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/60devs/tips-extension/issues"
+  },
+  "homepage": "https://github.com/60devs/tips-extension#readme",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-babel": "^5.1.0"
+  }
+}

@@ -7,7 +7,7 @@
     "page_action": {
         "default_title": "Tips by 60devs",
         "default_icon": {
-            "38": "icon_38.png"
+            "38": "data/icon_38.png"
         }
     },
 
@@ -18,8 +18,8 @@
     ],
 
     "icons": {
-        "64": "icon_64.png",
-        "128": "icon_128.png"
+        "64": "data/icon_64.png",
+        "128": "data/icon_128.png"
     },
 
     "content_scripts": [{
@@ -30,12 +30,12 @@
             "https://gitter.im/*",
             "https://tips.60devs.com/*"
         ],
-        "js": ["build/app.js"],
-        "css": ["build/app.css"],
+        "js": ["data/app.js"],
+        "css": ["data/app.css"],
         "all_frames": true
     }],
 
     "background": {
-        "scripts": ["build/background.js"]
+        "scripts": ["index.js"]
     }
 }

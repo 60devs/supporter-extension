@@ -1,0 +1,104 @@
+.t-ext-button {
+    cursor: pointer;
+    text-decoration: none !important;
+
+    transition-property: color;
+    transition-duration: 250ms;
+}
+
+.t-ext-button:hover {
+    color: #30a7fc !important;
+}
+
+.t-ext-gitter-button {
+    color: #999;
+    vertical-align: middle;
+    margin: 4px 0 0 10px;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.t-ext-stackoverflow-button {
+    color: #888;
+    float: none;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.t-ext-github-button {
+    color: #888;
+}
+
+.vcard .t-ext-github-button {
+    line-height: 40px;
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    border-top: 1px solid #eee;
+}
+
+.js-issues-results .t-ext-github-button {
+    position: absolute !important;
+    top: 54px;
+    left: 0;
+    font-size: 11px;
+}
+
+.t-ext-overlay {
+    background-color: rgba(0, 0, 0, 0.75);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+}
+
+.t-ext-attention-showing .t-ext-overlay {
+    opacity: 0;
+    animation: show-overlay 0.5s forwards;
+}
+
+.t-ext-attention-hiding .t-ext-overlay {
+    opacity: 1;
+    animation: hide-overlay 0.5s forwards;
+}
+
+.t-ext-attention-showing .t-ext-button {
+    color: #30a7fc !important;
+    position: relative;
+    border: none;
+    z-index: 1000;
+}
+
+.t-ext-attention-showing .vcard .t-ext-github-button {
+    color: #30a7fc !important;
+    position: relative;
+    border-top: 1px solid transparent;
+    z-index: 1000;
+}
+
+.t-ext-attention-showing .vcard .t-ext-github-button+.vcard-details {
+    border-top: 1px solid transparent;
+}
+
+@keyframes show-overlay {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes hide-overlay {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
