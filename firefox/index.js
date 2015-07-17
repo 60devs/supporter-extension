@@ -5,22 +5,26 @@ var pageMod = require('sdk/page-mod');
 
 var myTabs = {};
 
-var button = buttons.ActionButton({
-  id: 'tips-link',
-  label: 'Highlight Tip Links',
-  disabled: true,
-  icon: {
-    16: './icon_38.png',
-    32: './icon_38.png',
-    64: './icon_64.png'
-  },
-  onClick: function handleClick(state) {
-    var worker = myTabs[tabs.activeTab.id];
-    worker.port.emit('pageActionClick', {
-      action: 'pageActionClick'
-    });
-  }
-});
+function createButton() {
+  return buttons.ActionButton({
+    id: 'tips-link',
+    label: 'Highlight Tip Links',
+    disabled: true,
+    icon: {
+      16: './icon_38.png',
+      32: './icon_38.png',
+      64: './icon_64.png'
+    },
+    onClick: function handleClick(state) {
+      var worker = myTabs[tabs.activeTab.id];
+      worker.port.emit('pageActionClick', {
+        action: 'pageActionClick'
+      });
+    }
+  });
+}
+
+var button = null;
 
 function onAttach(worker) {
   var tab = worker.tab;
@@ -28,6 +32,10 @@ function onAttach(worker) {
   var tabId = tab.id;
 
   if (/^(github|stackoverflow|gitter|tips\.60devs)/.test(host)) {
+    if (!button) {
+      button = createButton();
+    }
+
     button.state(tab, {
       disabled: false,
       icon: {
@@ -37,40 +45,23 @@ function onAttach(worker) {
       }
     });
   } else {
-    button.state(tab, {
-      disabled: true,
-      icon: {
-        16: './icon_38_disabled.png',
-        32: './icon_38_disabled.png',
-        64: './icon_64_disabled.png'
-      }
-    })
+    if (button) {
+      button.destroy();
+    }
+
+    button = null;
   }
 
   myTabs[tabId] = worker;
 
   worker.on('detach', function() {
-    button.state(tabs.activeTab, {
-      disabled: true,
-      icon: {
-        16: './icon_38_disabled.png',
-        32: './icon_38_disabled.png',
-        64: './icon_64_disabled.png'
-      }
-    })
+    if (button) {
+      button.destroy();
+    }
+
+    button = null;
   });
 }
-
-tabs.on('activate', function(tab) {
-  button.state(tabs.activeTab, {
-    disabled: false,
-    icon: {
-      16: './icon_38.png',
-      32: './icon_38.png',
-      64: './icon_64.png'
-    }
-  });
-});
 
 var { List } = require('sdk/util/list');
 
