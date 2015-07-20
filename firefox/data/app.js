@@ -1,8 +1,5 @@
 /* globals chrome, XMLHttpRequest, self */
 
-/**
-* For FF
-*/
 'use strict';
 
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
@@ -13,6 +10,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
+var LEAVE_A_TIP_LINK = 'leave a tip';
+
+/**
+* For FF
+*/
 if (!Element.prototype.scrollIntoViewIfNeeded) {
   Element.prototype.scrollIntoViewIfNeeded = function (centerIfNeeded) {
     centerIfNeeded = arguments.length === 0 ? true : !!centerIfNeeded;
@@ -299,7 +301,7 @@ var GitterAgent = (function (_BaseAgent) {
     value: function renderButton(user) {
       var template = document.createElement('template');
 
-      template.innerHTML = '\n            <a href="http://tips.60devs.com/#/pay/github/' + user + '" target=\'_blank\' class="t-ext-button t-ext-gitter-button">\n                ' + Utils.t('leave tips') + '\n            </a>';
+      template.innerHTML = '\n            <a href="http://tips.60devs.com/#/pay/github/' + user + '" target=\'_blank\' class="t-ext-button t-ext-gitter-button">\n                ' + Utils.t(LEAVE_A_TIP_LINK) + '\n            </a>';
       return template.content;
     }
   }, {
@@ -486,7 +488,7 @@ var GithubAgent = (function (_BaseAgent2) {
     value: function renderButton(user) {
       var template = document.createElement('template');
 
-      template.innerHTML = '\n            <a href="http://tips.60devs.com/#/pay/github/' + user + '" target="_blank" class="t-ext-button t-ext-github-button">\n              ' + Utils.t('leave tips') + '\n            </a>';
+      template.innerHTML = '\n            <a href="http://tips.60devs.com/#/pay/github/' + user + '" target="_blank" class="t-ext-button t-ext-github-button">\n              ' + Utils.t(LEAVE_A_TIP_LINK) + '\n            </a>';
       return template.content;
     }
   }, {
@@ -667,7 +669,7 @@ var StackOverflowAgent = (function (_BaseAgent3) {
     value: function renderButton(user) {
       var template = document.createElement('template');
 
-      template.innerHTML = '\n            <a href="http://tips.60devs.com/#/pay/stackoverflow/' + user + '" target="_blank" class="t-ext-button t-ext-stackoverflow-button">\n                ' + Utils.t('leave tips') + '\n            </a>';
+      template.innerHTML = '\n            <a href="http://tips.60devs.com/#/pay/stackoverflow/' + user + '" target="_blank" class="t-ext-button t-ext-stackoverflow-button">\n                ' + Utils.t(LEAVE_A_TIP_LINK) + '\n            </a>';
       return template.content;
     }
   }, {

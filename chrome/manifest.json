@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Tips by 60 Devs",
     "description": "Reward developers who help you and be rewarded for helping others.",
-    "version": "1.4",
+    "version": "1.5",
 
     "page_action": {
         "default_title": "Tips by 60devs",

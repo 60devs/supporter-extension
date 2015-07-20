@@ -1,5 +1,7 @@
 /* globals chrome, XMLHttpRequest, self */
 
+var LEAVE_A_TIP_LINK = 'leave a tip';
+
 /**
 * For FF
 */
@@ -204,7 +206,7 @@ class GitterAgent extends BaseAgent {
 
       template.innerHTML = `
             <a href="http://tips.60devs.com/#/pay/github/${user}" target='_blank' class="t-ext-button t-ext-gitter-button">
-                ${Utils.t('leave tips')}
+                ${Utils.t(LEAVE_A_TIP_LINK)}
             </a>`
       return template.content;
     }
@@ -318,7 +320,7 @@ class GithubAgent extends BaseAgent {
 
       template.innerHTML = `
             <a href="http://tips.60devs.com/#/pay/github/${user}" target="_blank" class="t-ext-button t-ext-github-button">
-              ${Utils.t('leave tips')}
+              ${Utils.t(LEAVE_A_TIP_LINK)}
             </a>`;
       return template.content;
     }
@@ -427,7 +429,7 @@ class StackOverflowAgent extends BaseAgent {
 
       template.innerHTML = `
             <a href="http://tips.60devs.com/#/pay/stackoverflow/${user}" target="_blank" class="t-ext-button t-ext-stackoverflow-button">
-                ${Utils.t('leave tips')}
+                ${Utils.t(LEAVE_A_TIP_LINK)}
             </a>`;
       return template.content;
     }
