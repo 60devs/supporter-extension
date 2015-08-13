@@ -262,22 +262,22 @@ class GithubAgent extends BaseAgent {
     }
 
     initUnknownUsers() {
-      if (this.isIssuesPage()) {
-        this.initUnknownUsersOnIssuesPage();
+      if (this.isDiscussionPage()) {
+        this.initUnknownUsersOnDiscussionPage();
       } else {
         this.initUnknownUsersOnProfilePage();
       }
     }
 
-    isIssuesPage() {
-      return !!document.getElementById('show_issue');
+    isDiscussionPage() {
+      return !!document.querySelector('.js-comment-container');
     }
 
-    initUnknownUsersOnIssuesPage() {
+    initUnknownUsersOnDiscussionPage() {
       var nodes;
       var users = [];
 
-      nodes = document.querySelectorAll('#show_issue .js-comment-container:not(.t-user) .timeline-comment-avatar');
+      nodes = document.querySelectorAll('.js-comment-container:not(.t-user) .timeline-comment-avatar');
       nodes = [].slice.call(nodes);
 
       for (let node of nodes) {
@@ -326,18 +326,18 @@ class GithubAgent extends BaseAgent {
     }
 
     render() {
-      if (this.isIssuesPage()) {
-        this.renderOnIssuesPage();
+      if (this.isDiscussionPage()) {
+        this.renderOnDiscussionPage();
       } else {
         this.renderOnProfilePage();
       }
     }
 
-    renderOnIssuesPage() {
+    renderOnDiscussionPage() {
       var nodes;
       var users = [];
 
-      nodes = document.querySelectorAll('#show_issue .t-user');
+      nodes = document.querySelectorAll('.t-user');
       nodes = [].slice.call(nodes);
 
       for (let node of nodes) {

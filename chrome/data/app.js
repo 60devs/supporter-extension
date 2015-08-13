@@ -6,7 +6,7 @@ var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_ag
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -163,6 +163,8 @@ var BaseAgent = (function () {
 })();
 
 var GitterAgent = (function (_BaseAgent) {
+  _inherits(GitterAgent, _BaseAgent);
+
   function GitterAgent() {
     _classCallCheck(this, GitterAgent);
 
@@ -170,8 +172,6 @@ var GitterAgent = (function (_BaseAgent) {
     this.document = document;
     this.providerType = 'github';
   }
-
-  _inherits(GitterAgent, _BaseAgent);
 
   _createClass(GitterAgent, [{
     key: 'start',
@@ -355,14 +355,14 @@ var GitterAgent = (function (_BaseAgent) {
 })(BaseAgent);
 
 var GithubAgent = (function (_BaseAgent2) {
+  _inherits(GithubAgent, _BaseAgent2);
+
   function GithubAgent() {
     _classCallCheck(this, GithubAgent);
 
     _get(Object.getPrototypeOf(GithubAgent.prototype), 'constructor', this).call(this);
     this.providerType = 'github';
   }
-
-  _inherits(GithubAgent, _BaseAgent2);
 
   _createClass(GithubAgent, [{
     key: 'start',
@@ -387,24 +387,24 @@ var GithubAgent = (function (_BaseAgent2) {
   }, {
     key: 'initUnknownUsers',
     value: function initUnknownUsers() {
-      if (this.isIssuesPage()) {
-        this.initUnknownUsersOnIssuesPage();
+      if (this.isDiscussionPage()) {
+        this.initUnknownUsersOnDiscussionPage();
       } else {
         this.initUnknownUsersOnProfilePage();
       }
     }
   }, {
-    key: 'isIssuesPage',
-    value: function isIssuesPage() {
-      return !!document.getElementById('show_issue');
+    key: 'isDiscussionPage',
+    value: function isDiscussionPage() {
+      return !!document.querySelector('.js-comment-container');
     }
   }, {
-    key: 'initUnknownUsersOnIssuesPage',
-    value: function initUnknownUsersOnIssuesPage() {
+    key: 'initUnknownUsersOnDiscussionPage',
+    value: function initUnknownUsersOnDiscussionPage() {
       var nodes;
       var users = [];
 
-      nodes = document.querySelectorAll('#show_issue .js-comment-container:not(.t-user) .timeline-comment-avatar');
+      nodes = document.querySelectorAll('.js-comment-container:not(.t-user) .timeline-comment-avatar');
       nodes = [].slice.call(nodes);
 
       var _iteratorNormalCompletion5 = true;
@@ -494,19 +494,19 @@ var GithubAgent = (function (_BaseAgent2) {
   }, {
     key: 'render',
     value: function render() {
-      if (this.isIssuesPage()) {
-        this.renderOnIssuesPage();
+      if (this.isDiscussionPage()) {
+        this.renderOnDiscussionPage();
       } else {
         this.renderOnProfilePage();
       }
     }
   }, {
-    key: 'renderOnIssuesPage',
-    value: function renderOnIssuesPage() {
+    key: 'renderOnDiscussionPage',
+    value: function renderOnDiscussionPage() {
       var nodes;
       var users = [];
 
-      nodes = document.querySelectorAll('#show_issue .t-user');
+      nodes = document.querySelectorAll('.t-user');
       nodes = [].slice.call(nodes);
 
       var _iteratorNormalCompletion7 = true;
@@ -564,14 +564,14 @@ var GithubAgent = (function (_BaseAgent2) {
 })(BaseAgent);
 
 var StackOverflowAgent = (function (_BaseAgent3) {
+  _inherits(StackOverflowAgent, _BaseAgent3);
+
   function StackOverflowAgent() {
     _classCallCheck(this, StackOverflowAgent);
 
     _get(Object.getPrototypeOf(StackOverflowAgent.prototype), 'constructor', this).call(this);
     this.providerType = 'stackoverflow';
   }
-
-  _inherits(StackOverflowAgent, _BaseAgent3);
 
   _createClass(StackOverflowAgent, [{
     key: 'start',
