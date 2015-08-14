@@ -1,7 +1,7 @@
 {
   "title": "Tips by 60 Devs",
   "name": "tips-extension",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Reward developers who help you and be rewarded for helping others.",
   "main": "index.js",
   "author": "60devs",

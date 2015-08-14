@@ -205,7 +205,7 @@ class GitterAgent extends BaseAgent {
       var template = document.createElement('template');
 
       template.innerHTML = `
-            <a href="http://tips.60devs.com/#/pay/github/${user}" target='_blank' class="t-ext-button t-ext-gitter-button">
+            <a href="https://tips.60devs.com/#/pay/github/${user}" target='_blank' class="t-ext-button t-ext-gitter-button">
                 ${Utils.t(LEAVE_A_TIP_LINK)}
             </a>`
       return template.content;
@@ -319,7 +319,7 @@ class GithubAgent extends BaseAgent {
       var template = document.createElement('template');
 
       template.innerHTML = `
-            <a href="http://tips.60devs.com/#/pay/github/${user}" target="_blank" class="t-ext-button t-ext-github-button">
+            <a href="https://tips.60devs.com/#/pay/github/${user}" target="_blank" class="t-ext-button t-ext-github-button">
               ${Utils.t(LEAVE_A_TIP_LINK)}
             </a>`;
       return template.content;
@@ -428,7 +428,7 @@ class StackOverflowAgent extends BaseAgent {
       var template = document.createElement('template');
 
       template.innerHTML = `
-            <a href="http://tips.60devs.com/#/pay/stackoverflow/${user}" target="_blank" class="t-ext-button t-ext-stackoverflow-button">
+            <a href="https://tips.60devs.com/#/pay/stackoverflow/${user}" target="_blank" class="t-ext-button t-ext-stackoverflow-button">
                 ${Utils.t(LEAVE_A_TIP_LINK)}
             </a>`;
       return template.content;

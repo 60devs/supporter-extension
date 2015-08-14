@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Tips by 60 Devs",
     "description": "Reward developers who help you and be rewarded for helping others.",
-    "version": "1.6",
+    "version": "1.7",
 
     "page_action": {
         "default_title": "Tips by 60devs",
@@ -28,7 +28,8 @@
             "http://stackoverflow.com/*",
             "https://stackoverflow.com/*",
             "https://gitter.im/*",
-            "https://tips.60devs.com/*"
+            "https://tips.60devs.com/*",
+            "http://tips.60devs.com/*"
         ],
         "js": ["data/app.js"],
         "css": ["data/app.css"],
