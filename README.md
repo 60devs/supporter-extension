@@ -1,4 +1,4 @@
-#Tips by 60 Devs
+#Supporter by 60 Devs
 
 Personal buttons
 
