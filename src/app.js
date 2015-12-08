@@ -1,7 +1,7 @@
 /* globals chrome, XMLHttpRequest, self */
 
-var LEAVE_A_TIP_LINK = 'leave a tip';
-
+var LEAVE_A_TIP_LINK = 'reward ($)';
+var HTTPS_HOST = 'https://supporter.60devs.com';
 /**
 * For FF
 */
@@ -81,7 +81,7 @@ class BaseAgent {
       if (button) {
         this.hightlightButton(button);
       } else {
-        alert('No users who are able to accept tips on this page.');
+        alert('No users who are able to accept donations on this page.');
       }
     }
 
@@ -114,7 +114,7 @@ class BaseAgent {
     discoverUsers(users) {
       var xhr = new XMLHttpRequest();
 
-      xhr.open('POST', `https://tips.60devs.com/api/status/${this.providerType}`, true);
+      xhr.open('POST', `${HTTPS_HOST}/api/status/${this.providerType}`, true);
       xhr.setRequestHeader('Content-type', 'application/json');
       xhr.send(JSON.stringify(users));
       xhr.onreadystatechange = () => {
@@ -205,7 +205,7 @@ class GitterAgent extends BaseAgent {
       var template = document.createElement('template');
 
       template.innerHTML = `
-            <a href="https://tips.60devs.com/#/pay/github/${user}" target='_blank' class="t-ext-button t-ext-gitter-button">
+            <a href="${HTTPS_HOST}/#/pay/github/${user}" target='_blank' class="t-ext-button t-ext-gitter-button">
                 ${Utils.t(LEAVE_A_TIP_LINK)}
             </a>`
       return template.content;
@@ -319,7 +319,7 @@ class GithubAgent extends BaseAgent {
       var template = document.createElement('template');
 
       template.innerHTML = `
-            <a href="https://tips.60devs.com/#/pay/github/${user}" target="_blank" class="t-ext-button t-ext-github-button">
+            <a href="${HTTPS_HOST}/#/pay/github/${user}" target="_blank" class="t-ext-button t-ext-github-button">
               ${Utils.t(LEAVE_A_TIP_LINK)}
             </a>`;
       return template.content;
@@ -428,7 +428,7 @@ class StackOverflowAgent extends BaseAgent {
       var template = document.createElement('template');
 
       template.innerHTML = `
-            <a href="https://tips.60devs.com/#/pay/stackoverflow/${user}" target="_blank" class="t-ext-button t-ext-stackoverflow-button">
+            <a href="${HTTPS_HOST}/#/pay/stackoverflow/${user}" target="_blank" class="t-ext-button t-ext-stackoverflow-button">
                 ${Utils.t(LEAVE_A_TIP_LINK)}
             </a>`;
       return template.content;
