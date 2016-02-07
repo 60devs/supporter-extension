@@ -1,4 +1,9 @@
-#Tips by 60 Devs
-[![Tips](https://tips.60devs.com/images/button-black.svg)](https://tips.60devs.com/tip/fd92ac0c038a5ef6b879009c0b758b36) [![Tips](https://tips.60devs.com/images/button-white.svg)](https://tips.60devs.com/tip/fd92ac0c038a5ef6b879009c0b758b36)
+#Supporter by 60 Devs
 
-Reward developers who help you and be rewarded for helping others.
+Personal buttons
+
+[![Support](https://supporter.60devs.com/api/b/fd92ac0c038a5ef6b879009c0b758b36/)](https://supporter.60devs.com/give/fd92ac0c038a5ef6b879009c0b758b36)
+
+Project Button
+
+[![Support](https://supporter.60devs.com/api/b/fd92ac0c038a5ef6b879009c0b758b36/This%20Extension)](https://supporter.60devs.com/support/fd92ac0c038a5ef6b879009c0b758b36/This%20Extension)

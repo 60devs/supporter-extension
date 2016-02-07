@@ -1,11 +1,11 @@
 {
     "manifest_version": 2,
-    "name": "Tips by 60 Devs",
-    "description": "Reward developers who help you and be rewarded for helping others.",
-    "version": "1.6",
+    "name": "Supporter by 60 Devs",
+    "description": "Reward persons who help",
+    "version": "1.8",
 
     "page_action": {
-        "default_title": "Tips by 60devs",
+        "default_title": "Supporter by 60devs",
         "default_icon": {
             "38": "data/icon_38.png"
         }
@@ -14,7 +14,8 @@
     "permissions": [
         "tabs",
         "activeTab",
-        "https://tips.60devs.com/*"
+        "https://tips.60devs.com/*",
+        "https://supporter.60devs.com/*"
     ],
 
     "icons": {
@@ -28,7 +29,10 @@
             "http://stackoverflow.com/*",
             "https://stackoverflow.com/*",
             "https://gitter.im/*",
-            "https://tips.60devs.com/*"
+            "https://tips.60devs.com/*",
+            "http://tips.60devs.com/*",
+            "https://supporter.60devs.com/*",
+            "http://supporter.60devs.com/*"
         ],
         "js": ["data/app.js"],
         "css": ["data/app.css"],

@@ -6,12 +6,12 @@ var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_ag
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var LEAVE_A_TIP_LINK = 'leave a tip';
-
+var LEAVE_A_TIP_LINK = 'reward ($)';
+var HTTPS_HOST = 'https://supporter.60devs.com';
 /**
 * For FF
 */
@@ -97,7 +97,7 @@ var BaseAgent = (function () {
       if (button) {
         this.hightlightButton(button);
       } else {
-        alert('No users who are able to accept tips on this page.');
+        alert('No users who are able to accept donations on this page.');
       }
     }
   }, {
@@ -135,7 +135,7 @@ var BaseAgent = (function () {
 
       var xhr = new XMLHttpRequest();
 
-      xhr.open('POST', 'https://tips.60devs.com/api/status/' + this.providerType, true);
+      xhr.open('POST', HTTPS_HOST + '/api/status/' + this.providerType, true);
       xhr.setRequestHeader('Content-type', 'application/json');
       xhr.send(JSON.stringify(users));
       xhr.onreadystatechange = function () {
@@ -163,8 +163,6 @@ var BaseAgent = (function () {
 })();
 
 var GitterAgent = (function (_BaseAgent) {
-  _inherits(GitterAgent, _BaseAgent);
-
   function GitterAgent() {
     _classCallCheck(this, GitterAgent);
 
@@ -172,6 +170,8 @@ var GitterAgent = (function (_BaseAgent) {
     this.document = document;
     this.providerType = 'github';
   }
+
+  _inherits(GitterAgent, _BaseAgent);
 
   _createClass(GitterAgent, [{
     key: 'start',
@@ -301,7 +301,7 @@ var GitterAgent = (function (_BaseAgent) {
     value: function renderButton(user) {
       var template = document.createElement('template');
 
-      template.innerHTML = '\n            <a href="http://tips.60devs.com/#/pay/github/' + user + '" target=\'_blank\' class="t-ext-button t-ext-gitter-button">\n                ' + Utils.t(LEAVE_A_TIP_LINK) + '\n            </a>';
+      template.innerHTML = '\n            <a href="' + HTTPS_HOST + '/#/pay/github/' + user + '" target=\'_blank\' class="t-ext-button t-ext-gitter-button">\n                ' + Utils.t(LEAVE_A_TIP_LINK) + '\n            </a>';
       return template.content;
     }
   }, {
@@ -355,14 +355,14 @@ var GitterAgent = (function (_BaseAgent) {
 })(BaseAgent);
 
 var GithubAgent = (function (_BaseAgent2) {
-  _inherits(GithubAgent, _BaseAgent2);
-
   function GithubAgent() {
     _classCallCheck(this, GithubAgent);
 
     _get(Object.getPrototypeOf(GithubAgent.prototype), 'constructor', this).call(this);
     this.providerType = 'github';
   }
+
+  _inherits(GithubAgent, _BaseAgent2);
 
   _createClass(GithubAgent, [{
     key: 'start',
@@ -488,7 +488,7 @@ var GithubAgent = (function (_BaseAgent2) {
     value: function renderButton(user) {
       var template = document.createElement('template');
 
-      template.innerHTML = '\n            <a href="http://tips.60devs.com/#/pay/github/' + user + '" target="_blank" class="t-ext-button t-ext-github-button">\n              ' + Utils.t(LEAVE_A_TIP_LINK) + '\n            </a>';
+      template.innerHTML = '\n            <a href="' + HTTPS_HOST + '/#/pay/github/' + user + '" target="_blank" class="t-ext-button t-ext-github-button">\n              ' + Utils.t(LEAVE_A_TIP_LINK) + '\n            </a>';
       return template.content;
     }
   }, {
@@ -564,14 +564,14 @@ var GithubAgent = (function (_BaseAgent2) {
 })(BaseAgent);
 
 var StackOverflowAgent = (function (_BaseAgent3) {
-  _inherits(StackOverflowAgent, _BaseAgent3);
-
   function StackOverflowAgent() {
     _classCallCheck(this, StackOverflowAgent);
 
     _get(Object.getPrototypeOf(StackOverflowAgent.prototype), 'constructor', this).call(this);
     this.providerType = 'stackoverflow';
   }
+
+  _inherits(StackOverflowAgent, _BaseAgent3);
 
   _createClass(StackOverflowAgent, [{
     key: 'start',
@@ -669,7 +669,7 @@ var StackOverflowAgent = (function (_BaseAgent3) {
     value: function renderButton(user) {
       var template = document.createElement('template');
 
-      template.innerHTML = '\n            <a href="http://tips.60devs.com/#/pay/stackoverflow/' + user + '" target="_blank" class="t-ext-button t-ext-stackoverflow-button">\n                ' + Utils.t(LEAVE_A_TIP_LINK) + '\n            </a>';
+      template.innerHTML = '\n            <a href="' + HTTPS_HOST + '/#/pay/stackoverflow/' + user + '" target="_blank" class="t-ext-button t-ext-stackoverflow-button">\n                ' + Utils.t(LEAVE_A_TIP_LINK) + '\n            </a>';
       return template.content;
     }
   }, {
