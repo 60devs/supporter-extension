@@ -14,7 +14,9 @@
     "permissions": [
         "tabs",
         "activeTab",
+        "https://tips.60devs.com",
         "https://tips.60devs.com/*",
+        "https://supporter.60devs.com",
         "https://supporter.60devs.com/*"
     ],
 
