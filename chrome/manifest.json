@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Supporter by 60 Devs",
     "description": "Reward persons who help",
-    "version": "1.8",
+    "version": "1.9",
 
     "page_action": {
         "default_title": "Supporter by 60devs",
