@@ -20,5 +20,3 @@ Test Project Button
 
 ## Test Projects
 
-![Support](https://60devs.com/img/test.svg)
-
